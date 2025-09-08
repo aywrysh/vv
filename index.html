@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>لوحة التحكم – الرئيسية</title>
+
+  <!-- خط وأيقونات جوجل -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent:#BBCF38;
+      --ink:#0f172a;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --bg:#0b1220;
+      --radius:18px;
+      --shadow-lg:0 18px 40px rgba(0,0,0,.35);
+      --shadow-md:0 10px 24px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:"Cairo",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#e5e7eb;
+      background:
+        radial-gradient(1200px 600px at 100% -10%, #1f2937 0%, transparent 60%),
+        radial-gradient(900px 500px at -10% 100%, #111827 0%, transparent 60%),
+        linear-gradient(180deg,#0b1220 0%, #0b0f19 100%);
+    }
+
+    /* شريط علوي */
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter:saturate(140%) blur(10px);
+      background:linear-gradient(180deg, rgba(11,18,32,.75), rgba(11,18,32,.45));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900}
+    .dot{width:12px;height:12px;border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(187,207,56,.18)}
+    .top-actions{display:flex;gap:8px}
+    .btn{
+      width:40px;height:40px; display:grid; place-items:center; cursor:pointer;
+      border:1px solid rgba(255,255,255,.10); border-radius:12px; background:rgba(255,255,255,.04);
+      transition:transform .08s ease, border-color .2s ease;
+    }
+    .btn:hover{border-color:rgba(255,255,255,.18)}
+    .btn:active{transform:translateY(1px)}
+    .ms{font-family:'Material Symbols Rounded'; line-height:1}
+
+    /* الحاوية */
+    .container{max-width:1200px; margin:0 auto; padding:22px 14px 36px}
+
+    /* نافذة العنوان (بيضاء فخمة) */
+    .hero{
+      position:relative; border-radius:var(--radius); padding:26px 22px;
+      background:#fff; border:1px solid rgba(0,0,0,.06);
+      box-shadow:0 14px 40px rgba(0,0,0,.20), 0 2px 10px rgba(0,0,0,.08);
+      display:grid; gap:8px; text-align:center; overflow:hidden; isolation:isolate;
+    }
+    .hero::before{
+      content:""; position:absolute; inset:-40% -10% auto -10%; height:160px; border-radius:50%;
+      background:radial-gradient(400px 140px at 50% 40%, rgba(187,207,56,.18), rgba(255,255,255,0) 60%);
+      pointer-events:none;
+    }
+    .hero h1{margin:0; font-size:24px; color:#111827; font-weight:900}
+    .hero .hint{color:#6b7280; font-size:14px; font-weight:600}
+
+    /* شبكة الأزرار */
+    .grid{ margin-top:16px; display:grid; gap:14px; grid-template-columns:repeat(4, minmax(0, 1fr)); }
+    @media (max-width:1100px){ .grid{grid-template-columns:repeat(3, 1fr);} }
+    @media (max-width:780px) { .grid{grid-template-columns:repeat(2, 1fr);} }
+    @media (max-width:480px) { .grid{grid-template-columns:1fr;} }
+
+    .tile{
+      position:relative; overflow:hidden; cursor:pointer; isolation:isolate;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px; padding:18px;
+      display:flex; align-items:center; gap:12px;
+      box-shadow:var(--shadow-lg);
+      color:#f8fafc; text-decoration:none;
+      transition:transform .15s ease, border-color .2s ease, background .2s ease;
+    }
+    .tile:hover{ transform:translateY(-2px); border-color:rgba(187,207,56,.35); background:linear-gradient(180deg, rgba(187,207,56,.10), rgba(255,255,255,.03)); }
+    .tile:active{ transform:translateY(0) scale(.99); }
+    .tile .icon{
+      width:52px;height:52px; min-width:52px; border-radius:16px;
+      background:linear-gradient(180deg,#1f2937,#111827);
+      border:1px solid rgba(255,255,255,.10);
+      display:grid; place-items:center;
+    }
+    .tile .icon .ms{font-size:26px; color:var(--accent)}
+    .tile .text{display:grid; gap:2px}
+    .tile .title{font-weight:900; font-size:18px; color:#fff}
+    .tile .desc{font-size:12px; color:#cbd5e1}
+    .right{margin-inline-start:auto; color:#9ca3af; display:flex; align-items:center; gap:6px}
+    .chip{ font-weight:800; font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04); color:#d1d5db; }
+
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.18);animation:ripple .6s linear;pointer-events:none}
+    @keyframes ripple{to{transform:scale(3);opacity:0}}
+  </style>
+  
+   <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#BBCF38">
+  
+</head>
+<body>
+
+  <!-- شريط علوي مختصر -->
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span><span>الرئيسية</span></div>
+    <div class="top-actions">
+      <button class="btn" id="refreshBtn" title="تحديث"><span class="ms">refresh</span></button>
+      <button class="btn" id="helpBtn" title="مساعدة"><span class="ms">help</span></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- نافذة العنوان -->
+    <section class="hero">
+      <h1>لوحة عمليات الشركة</h1>
+      <div class="hint">اختر إحدى العمليات التالية لإدارتها بسرعة.</div>
+    </section>
+
+    <!-- شبكة الأزرار (روابط مباشرة لملفات حقيقية) -->
+    <section class="grid">
+      <a class="tile ripple-container" href="index2.html">
+        <div class="icon"><span class="ms">account_balance_wallet</span></div>
+        <div class="text"><div class="title">إيداع</div><div class="desc">تسجيل ومعاينة طلبات الإيداع</div></div>
+        <div class="right"><span class="chip">جديد</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <a class="tile ripple-container" href="index3.html">
+        <div class="icon"><span class="ms">payments</span></div>
+        <div class="text"><div class="title">سحب</div><div class="desc">إدارة طلبات السحب واعتمادها</div></div>
+        <div class="right"><span class="chip">مراجعة</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <a class="tile ripple-container" href="index4.html">
+        <div class="icon"><span class="ms">sync_alt</span></div>
+        <div class="text"><div class="title">تحويل</div><div class="desc">من حساب مستخدم لآخر</div></div>
+        <div class="right"><span class="chip">نشط</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <a class="tile ripple-container" href="index5.html">
+        <div class="icon"><span class="ms">account_tree</span></div>
+        <div class="text"><div class="title">قيود التحويل</div><div class="desc">من الرصيد إلى العقد المقفل</div></div>
+        <div class="right"><span class="chip">عرض</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <a class="tile ripple-container" href="index6.html">
+        <div class="icon"><span class="ms">person_add</span></div>
+        <div class="text"><div class="title">إنشاء حساب</div><div class="desc">إضافة مستخدم جديد للنظام</div></div>
+        <div class="right"><span class="chip">إدارة</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <a class="tile ripple-container" href="index7.html">
+        <div class="icon"><span class="ms">send</span></div>
+        <div class="text"><div class="title">إرسال رسالة</div><div class="desc">إشعار أو تنبيه</div></div>
+        <div class="right"><span class="chip">سريع</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <!-- ✅ عرض المستخدم (أدمن) -->
+      <a class="tile ripple-container" href="index8.html">
+        <div class="icon"><span class="ms">manage_search</span></div>
+        <div class="text"><div class="title">عرض المستخدم</div><div class="desc">بحث ونسخ بيانات الحساب</div></div>
+        <div class="right"><span class="chip">أدمن</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <!-- ✅ الإيداعات: قائمة ومراجعة -->
+      <a class="tile ripple-container" href="index9.html">
+        <div class="icon"><span class="ms">list_alt</span></div>
+        <div class="text"><div class="title">الإيداعات</div><div class="desc">سجل الإيداعات واعتمادها</div></div>
+        <div class="right"><span class="chip">سجل</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <!-- ✅ إنشاء حساب P2P -->
+      <a class="tile ripple-container" href="index10.html">
+        <div class="icon"><span class="ms">vpn_key</span></div>
+        <div class="text">
+          <div class="title">إنشاء حساب P2P</div>
+          <div class="desc">تحقّق بالاسم والـID وإنشاء بيانات الدخول</div>
+        </div>
+        <div class="right"><span class="chip">P2P</span><span class="ms">chevron_left</span></div>
+      </a>
+
+      <!-- 🆕 المقترحات والشكاوى -->
+      <a class="tile ripple-container" href="index11.html">
+        <div class="icon"><span class="ms">forum</span></div>
+        <div class="text">
+          <div class="title">المقترحات والشكاوى</div>
+          <div class="desc">مراجعة البلاغات والمقترحات</div>
+        </div>
+        <div class="right"><span class="chip">صندوق</span><span class="ms">chevron_left</span></div>
+      </a>
+      <!-- نهاية الإضافة -->
+    </section>
+  </main>
+
+  <script>
+  // Ripple بسيط بدون إلغاء التنقل
+  document.addEventListener('click', e=>{
+    const host = e.target.closest('.ripple-container'); if(!host) return;
+    const r = document.createElement('span');
+    const d = Math.max(host.clientWidth, host.clientHeight);
+    const rect = host.getBoundingClientRect();
+    r.className='ripple';
+    r.style.width=r.style.height=d+'px';
+    r.style.left=(e.clientX-rect.left-d/2)+'px';
+    r.style.top=(e.clientY-rect.top-d/2)+'px';
+    const old=host.querySelector('.ripple'); if(old) old.remove();
+    host.appendChild(r); setTimeout(()=>r.remove(),600);
+  });
+
+  // أزرار أعلى الصفحة
+  document.getElementById('refreshBtn').onclick = ()=>location.reload();
+  document.getElementById('helpBtn').onclick    = ()=>alert('افتح الصفحة المطلوبة: index1…index10 + index11.html (المقترحات والشكاوى).');
+  </script>
+  
+  
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(reg => console.log("✔ Service Worker registered"))
+      .catch(err => console.error("❌ Service Worker failed:", err));
+  }
+</script>
+  
+  
+</body>
+</html>
